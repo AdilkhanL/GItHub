@@ -1,3 +1,4 @@
+import random
 x = 5 #int
 print(type(x))
 
@@ -15,3 +16,7 @@ print(type(w))
 
 s = "How are you?" #str
 print(type(s))
+
+
+#Random
+print(random.randrange(1, 10))
