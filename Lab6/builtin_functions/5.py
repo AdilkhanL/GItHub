@@ -11,5 +11,7 @@ def convert(x):
     else:
         return x
 
+
+
 m_t = tuple(convert(x) for x in t.split())
 print(all(m_t))
