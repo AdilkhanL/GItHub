@@ -22,7 +22,9 @@ bg = pygame.image.load("Lab8/Car/Road.png").convert_alpha()
 Player = pygame.image.load("Lab8/Car/Player_car.png").convert_alpha()
 Enemy = pygame.image.load("Lab8/Car/Enemy_car.png").convert_alpha()
 Coin = pygame.image.load("Lab8/Car/Coin.png").convert_alpha()
-Coin = pygame.transform.scale(Coin, (40, 45))
+size1 = (20, 25)
+size2 = (40, 45)
+size3 = (60, 65)
 
 
 #Fone
@@ -33,12 +35,12 @@ Enemy_y = -100
 
 #Timer spawn of enemy
 spawn_enemy = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_enemy, 2000)
+pygame.time.set_timer(spawn_enemy, 500)
 enemy_list = []
 
 #Timer spawn of coins
 spawn_coin = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_coin, 5000)
+pygame.time.set_timer(spawn_coin, 2000)
 coin_list = []
 
 
@@ -96,7 +98,14 @@ while running:
             for (i, el) in enumerate(coin_list):
                 screen.blit(Coin, el)
                 if player_rect.colliderect(el):
-                    Score += random.randrange(1, 3) #Random weights
+                    c = random.randrange(1, 3)
+                    Score += c #Random weights
+                    if c == 1:
+                        Coin = pygame.transform.scale(Coin, size1)
+                    if c == 2:
+                        Coin = pygame.transform.scale(Coin, size2)
+                    if c == 3:
+                        Coin = pygame.transform.scale(Coin, size3)
                     coin_list.pop(i)
         
         #Random spawn enemy
@@ -157,6 +166,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == spawn_enemy: #Append enemy_list
+            enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
+            enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
+            enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
+            enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
+            enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
             enemy_list.append(Enemy.get_rect(topleft = (Enemy_x, Enemy_y)))
         if event.type == spawn_coin: #Append coin_list
             coin_list.append(Coin.get_rect(topleft = (coin_spawn_x, coin_spawn_y)))
