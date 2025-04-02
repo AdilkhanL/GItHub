@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import time
 
 # Инициализация Pygame
 pygame.init()
@@ -15,6 +16,8 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
 
 # Настройки скорости
 START_SPEED = 10
@@ -30,7 +33,7 @@ class Snake:
     def __init__(self):
         self.body = [(100, 100), (80, 100), (60, 100)]  # Начальная длина змеи
         self.direction = "RIGHT"
-        self.grow = False #Рост
+        self.grow = False
     
     def move(self):
         x, y = self.body[0]
@@ -73,10 +76,12 @@ class Snake:
         for segment in self.body:
             pygame.draw.rect(screen, GREEN, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
 
-# Тамақ классы
+# Класс Еды
 class Food:
     def __init__(self, snake_body):
         self.position = self.generate_food_position(snake_body)
+        self.weight = random.choice([1, 2, 3])  # Случайный вес еды
+        self.spawn_time = time.time()  # Время появления еды
     
     def generate_food_position(self, snake_body):
         while True:
@@ -85,8 +90,19 @@ class Food:
             if (x, y) not in snake_body:
                 return (x, y)
     
-    def draw(self): # Aplle
-        pygame.draw.rect(screen, RED, (self.position[0], self.position[1], CELL_SIZE, CELL_SIZE))
+    def should_disappear(self):
+        # Еда исчезает через 5 секунд
+        return time.time() - self.spawn_time > 5
+    
+    def draw(self):
+        # Разные цвета для еды в зависимости от веса
+        if self.weight == 1:
+            color = RED
+        elif self.weight == 2:
+            color = YELLOW
+        elif self.weight == 3:
+            color = BLUE
+        pygame.draw.rect(screen, color, (self.position[0], self.position[1], CELL_SIZE, CELL_SIZE))
 
 # Функция для начала игры
 def start_game():
@@ -122,13 +138,17 @@ def start_game():
         # Проверка на поедание еды
         if snake.body[0] == food.position:
             snake.grow_snake()
+            score += food.weight  # Увеличиваем счёт на вес еды
             food = Food(snake.body)
-            score += 1
             
             # Увеличение уровня и скорости
             if score % LEVEL_UP_FOOD == 0:
                 level += 1
                 speed += 2
+        
+        # Проверка, должна ли еда исчезнуть
+        if food.should_disappear():
+            food = Food(snake.body)
         
         # Отрисовка объектов
         snake.draw()
@@ -149,7 +169,7 @@ def start_game():
 while True:
     screen.fill(WHITE)
     start_text = font.render("Press ENTER to Start", True, BLACK)
-    screen.blit(start_text, (SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 - 40))
+    screen.blit(start_text, (SCREEN_WIDTH // 2 - 80, SCREEN_HEIGHT // 2))
     pygame.display.flip()
     
     for event in pygame.event.get():
