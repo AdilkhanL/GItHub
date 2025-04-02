@@ -56,8 +56,19 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONUP:
             if current_mode == MODE_RECTANGLE:
-                end_pos = event.pos
-                pygame.draw.rect(screen, drawing_color, (start_pos, (end_pos[0] - start_pos[0], end_pos[1] - start_pos[1])), 2)
+                end_pos = event.pos # x2, y2
+                #when - -
+                if end_pos[0] - start_pos[0] < 0 and end_pos[1] - start_pos[1] < 0:
+                    pygame.draw.rect(screen, drawing_color, (end_pos, (abs(end_pos[0] - start_pos[0]), abs(end_pos[1] - start_pos[1]))), 2)
+                #when + +
+                if end_pos[0] - start_pos[0] > 0 and end_pos[1] - start_pos[1] > 0:
+                    pygame.draw.rect(screen, drawing_color, (start_pos, (end_pos[0] - start_pos[0], end_pos[1] - start_pos[1])), 2)
+                #when + -
+                if end_pos[0] - start_pos[0] > 0 and end_pos[1] - start_pos[1] < 0:
+                    pygame.draw.rect(screen, drawing_color, ((start_pos[0], end_pos[1]), (end_pos[0] - start_pos[0], abs(end_pos[1] - start_pos[1]))), 2)
+                #when - +
+                if end_pos[0] - start_pos[0] < 0 and end_pos[1] - start_pos[1] > 0:
+                    pygame.draw.rect(screen, drawing_color, ((end_pos[0], start_pos[1]), (abs(end_pos[0] - start_pos[0]), end_pos[1] - start_pos[1])), 2)
             elif current_mode == MODE_CIRCLE:
                 end_pos = event.pos
                 radius = max(abs(end_pos[0] - start_pos[0]), abs(end_pos[1] - start_pos[1]))
