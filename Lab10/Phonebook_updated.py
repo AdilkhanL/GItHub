@@ -146,9 +146,6 @@ Choose an action:
 5. Delete entry
 6. Exit
 7. Show all entries
-8. Show table structure
-9. Show table data
-10. Show table size
         """)
         choice = input("Enter choice (1-7): ")
         if choice == "1":
